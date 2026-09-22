@@ -58,10 +58,7 @@ Create `.cursor/mcp.json` in your project root.
   "mcpServers": {
     "srschatagent": {
       "command": "npx",
-      "args": ["-y", "@srschatagent/mcp"],
-      "env": {
-        "SRS_PROJECT_DIR": "/absolute/path/to/your/project"
-      }
+      "args": ["-y", "@srschatagent/mcp"]
     }
   }
 }
@@ -73,16 +70,13 @@ Create `.cursor/mcp.json` in your project root.
   "mcpServers": {
     "srschatagent": {
       "command": "npx.cmd",
-      "args": ["-y", "@srschatagent/mcp"],
-      "env": {
-        "SRS_PROJECT_DIR": "C:\\absolute\\path\\to\\your\\project"
-      }
+      "args": ["-y", "@srschatagent/mcp"]
     }
   }
 }
 ```
 
-Set `SRS_PROJECT_DIR` to the folder that contains your `.env` file. The session is stored as `.srschatagent-session.json` in that folder.
+The server reads `.env` and stores the session file (`.srschatagent-session.json`) in your project root automatically — no extra configuration needed.
 
 ---
 
@@ -116,7 +110,6 @@ Add these lines to `.gitignore` (so your key is never committed):
 | `SRS_CHAT_BASE_URL` | No | `https://chat.srs-ai.build` | Change only if the app is deployed elsewhere |
 | `SRS_CHAT_USER_EMAIL` | No | — | Optional — sent for attribution in chat logs |
 | `SRS_CHAT_USER_NAME` | No | — | Optional — sent for attribution in chat logs |
-| `SRS_PROJECT_DIR` | No | `process.cwd()` | Project root for `.env` and session file. Set this in Cursor's `env` block so the server finds your key regardless of working directory. `CLAUDE_PROJECT_DIR` (auto-injected by Claude Code) takes precedence if set. |
 
 > The server reads `.env` from your project root automatically. You do **not** need to export shell environment variables.
 
