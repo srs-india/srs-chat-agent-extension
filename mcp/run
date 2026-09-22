@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+import('./dist/index.js').catch(e => { process.stderr.write(String(e)); process.exit(1); });

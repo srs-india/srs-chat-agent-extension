@@ -1,0 +1,13 @@
+# Personal credentials — never commit
+.env
+
+# MCP session state — local per developer
+.claude/srschatagent-session.json
+
+# Build output
+mcp/dist/
+mcp/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
