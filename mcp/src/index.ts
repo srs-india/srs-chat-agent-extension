@@ -10,7 +10,9 @@ import { request } from "https";
 // ── Load .env from project root ───────────────────────────────────────────────
 // CLAUDE_PROJECT_DIR is injected by Claude Code; fall back to cwd for other clients.
 
-const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR
+                 ?? process.env.SRS_PROJECT_DIR
+                 ?? process.cwd();
 const ENV_FILE    = join(PROJECT_DIR, ".env");
 
 if (existsSync(ENV_FILE)) {
@@ -31,7 +33,7 @@ const USER_EMAIL = process.env.SRS_CHAT_USER_EMAIL ?? "";
 const USER_NAME  = process.env.SRS_CHAT_USER_NAME  ?? "";
 const BASE_URL   = (process.env.SRS_CHAT_BASE_URL ?? "https://chat.srs-ai.build").replace(/\/$/, "");
 const CHAT_URL   = `${BASE_URL}/api/v1/chat/query`;
-const SESSION_FILE = join(PROJECT_DIR, ".claude", "srschatagent-session.json");
+const SESSION_FILE = join(PROJECT_DIR, ".srschatagent-session.json");
 
 if (!API_KEY) {
   console.error(

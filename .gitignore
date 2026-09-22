@@ -2,7 +2,7 @@
 .env
 
 # MCP session state — local per developer
-.claude/srschatagent-session.json
+.srschatagent-session.json
 
 # Build output
 mcp/dist/

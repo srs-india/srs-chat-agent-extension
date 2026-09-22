@@ -50,18 +50,39 @@ Still requires a `.env` in each project root with your API key.
 
 ## Install — Cursor
 
-In Cursor's `mcp_settings.json`:
+Create `.cursor/mcp.json` in your project root.
 
+**macOS / Linux:**
 ```json
 {
   "mcpServers": {
     "srschatagent": {
       "command": "npx",
-      "args": ["-y", "@srschatagent/mcp"]
+      "args": ["-y", "@srschatagent/mcp"],
+      "env": {
+        "SRS_PROJECT_DIR": "/absolute/path/to/your/project"
+      }
     }
   }
 }
 ```
+
+**Windows** (`npx` is a PowerShell script — use `npx.cmd` instead):
+```json
+{
+  "mcpServers": {
+    "srschatagent": {
+      "command": "npx.cmd",
+      "args": ["-y", "@srschatagent/mcp"],
+      "env": {
+        "SRS_PROJECT_DIR": "C:\\absolute\\path\\to\\your\\project"
+      }
+    }
+  }
+}
+```
+
+Set `SRS_PROJECT_DIR` to the folder that contains your `.env` file. The session is stored as `.srschatagent-session.json` in that folder.
 
 ---
 
@@ -95,6 +116,7 @@ Add these lines to `.gitignore` (so your key is never committed):
 | `SRS_CHAT_BASE_URL` | No | `https://chat.srs-ai.build` | Change only if the app is deployed elsewhere |
 | `SRS_CHAT_USER_EMAIL` | No | — | Optional — sent for attribution in chat logs |
 | `SRS_CHAT_USER_NAME` | No | — | Optional — sent for attribution in chat logs |
+| `SRS_PROJECT_DIR` | No | `process.cwd()` | Project root for `.env` and session file. Set this in Cursor's `env` block so the server finds your key regardless of working directory. `CLAUDE_PROJECT_DIR` (auto-injected by Claude Code) takes precedence if set. |
 
 > The server reads `.env` from your project root automatically. You do **not** need to export shell environment variables.
 
@@ -123,11 +145,11 @@ Start a new SRS session and ask about the Toyota Crown engine.
 
 ## Session management
 
-Your conversation context is persisted in `.claude/srschatagent-session.json` (project-local, git-ignored). This means follow-up questions carry context from previous ones — just like the SRS chat web app.
+Your conversation context is persisted in `.srschatagent-session.json` in the project root (git-ignored). This means follow-up questions carry context from previous ones — just like the SRS chat web app.
 
 To reset:
 - Tell Claude: *"Start a new SRS session"*
-- Or delete `.claude/srschatagent-session.json`
+- Or delete `.srschatagent-session.json`
 
 ---
 
