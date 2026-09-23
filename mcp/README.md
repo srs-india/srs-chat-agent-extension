@@ -14,12 +14,15 @@ Once installed, just ask your AI assistant questions naturally — it will autom
 
 ---
 
-## Install — Claude Code
+## Install — Claude Code (CLI and Desktop App)
 
-### Option A: Per-project (team-shared)
+Option A works for both the **Claude Code CLI** and the **Claude Desktop app** — no CLI commands needed for the desktop app, just drop the file.
+
+### Option A: Per-project (team-shared) — recommended
 
 Add `.mcp.json` to your project root and commit it — **no secrets go in this file**:
 
+**macOS / Linux:**
 ```json
 {
   "mcpServers": {
@@ -32,11 +35,24 @@ Add `.mcp.json` to your project root and commit it — **no secrets go in this f
 }
 ```
 
-> If you already have `npx` on PATH, the `@srschatagent/mcp` package is downloaded and cached automatically on first use. No separate install step is needed.
+**Windows** (`npx` is a PowerShell script — use `npx.cmd` instead):
+```json
+{
+  "mcpServers": {
+    "srschatagent": {
+      "type": "stdio",
+      "command": "npx.cmd",
+      "args": ["-y", "@srschatagent/mcp"]
+    }
+  }
+}
+```
+
+> The `@srschatagent/mcp` package is downloaded and cached automatically on first use. No separate install step is needed.
 
 Then create your personal `.env` in the project root (see [Configure](#configure) below).
 
-### Option B: User-level (all projects)
+### Option B: User-level CLI (all projects)
 
 ```bash
 claude mcp add --transport stdio srschatagent \
@@ -99,7 +115,7 @@ Add these lines to `.gitignore` (so your key is never committed):
 
 ```
 .env
-.claude/srschatagent-session.json
+.srschatagent-session.json
 ```
 
 ### Environment variables
@@ -113,13 +129,51 @@ Add these lines to `.gitignore` (so your key is never committed):
 
 > The server reads `.env` from your project root automatically. You do **not** need to export shell environment variables.
 
+### Alternative: pass the API key directly in the config
+
+If `.env` isn't picking up (e.g. the working directory is wrong), you can pass the key directly in `.mcp.json` or `.cursor/mcp.json` via an `env` block:
+
+```json
+{
+  "mcpServers": {
+    "srschatagent": {
+      "type": "stdio",
+      "command": "npx.cmd",
+      "args": ["-y", "@srschatagent/mcp"],
+      "env": {
+        "SRS_CHAT_API_KEY": "arcai-YOUR_KEY_HERE",
+        "SRS_CHAT_BASE_URL": "https://chat.srs-ai.build"
+      }
+    }
+  }
+}
+```
+
+> Do not commit this file with the key in it — add it to `.gitignore` if you use this approach.
+
+---
+
+## Verify it's working
+
+After setup, restart Claude Code (or reload MCP servers in Cursor), then ask:
+
+```
+What tools do you have from srschatagent?
+```
+
+Claude should mention `srs_query`. Then try a real query:
+
+```
+What kind of engine does the Toyota Crown have?
+```
+
+> **Note:** The server may take a few seconds to connect on first use — you may see "MCP server connecting" briefly. Wait a moment and try again if the tool doesn't respond immediately.
+
 ---
 
 ## Usage
 
-Restart Claude Code (or reload MCP servers) after editing `.mcp.json` or `.env`.
-
-Then just ask questions naturally — Claude will call `srs_query` automatically:
+Ask questions naturally — Claude will call `srs_query` automatically:
 
 ```
 What kind of engine does the Toyota Crown have?
@@ -146,13 +200,34 @@ To reset:
 
 ---
 
+## Uninstall
+
+**Claude Code — per-project:**
+Delete `.mcp.json` from the project root (or remove the `srschatagent` entry from it).
+
+**Claude Code — user-level:**
+```bash
+claude mcp remove srschatagent --scope user
+```
+
+**Cursor:**
+Delete `.cursor/mcp.json` (or remove the `srschatagent` entry from it).
+
+**Clean up local files (all clients):**
+```
+.env
+.srschatagent-session.json
+```
+
+---
+
 ## Troubleshooting
 
 **Missing API key error at startup**
 ```
 [srschatagent-mcp] SRS_CHAT_API_KEY not found.
 ```
-Check that `.env` exists in the project root and contains `SRS_CHAT_API_KEY=...`.
+Check that `.env` exists in the project root and contains `SRS_CHAT_API_KEY=...`. Alternatively, pass it via the `env` block in your MCP config (see [Configure](#configure) above).
 
 **View server logs**
 ```bash

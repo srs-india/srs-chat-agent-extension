@@ -1,6 +1,6 @@
 {
   "name": "@srschatagent/mcp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "MCP server for the SRS AI knowledge-base chat API",
   "type": "module",
   "main": "dist/index.js",

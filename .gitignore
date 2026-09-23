@@ -8,6 +8,9 @@
 mcp/dist/
 mcp/node_modules/
 
+# Cursor agent intermediary files
+srs-query.mjs
+
 # OS
 .DS_Store
 Thumbs.db
