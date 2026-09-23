@@ -14,13 +14,9 @@ Once installed, just ask your AI assistant questions naturally — it will autom
 
 ---
 
-## Install — Claude Code (CLI and Desktop App)
+## Install — Claude Code Desktop App
 
-Option A works for both the **Claude Code CLI** and the **Claude Desktop app** — no CLI commands needed for the desktop app, just drop the file.
-
-### Option A: Per-project (team-shared) — recommended
-
-Add `.mcp.json` to your project root and commit it — **no secrets go in this file**:
+Add `.mcp.json` to your project root and commit it — **no secrets go in this file**. The Desktop App picks it up automatically when you open the project; no terminal commands needed.
 
 **macOS / Linux:**
 ```json
@@ -48,17 +44,27 @@ Add `.mcp.json` to your project root and commit it — **no secrets go in this f
 }
 ```
 
-> The `@srschatagent/mcp` package is downloaded and cached automatically on first use. No separate install step is needed.
+Then restart the Desktop App. The package is downloaded and cached automatically on first use.
 
 Then create your personal `.env` in the project root (see [Configure](#configure) below).
 
-### Option B: User-level CLI (all projects)
+---
+
+## Install — Claude Code CLI
+
+### Option A: Per-project (team-shared) — recommended
+
+Same `.mcp.json` file as the Desktop App above — add it to your project root and commit it. Claude Code CLI picks it up automatically when you run `claude` in that directory.
+
+### Option B: User-level (applies to all your projects)
 
 ```bash
 claude mcp add --transport stdio srschatagent \
   --scope user \
   -- npx -y @srschatagent/mcp
 ```
+
+> On Windows, replace `npx` with `npx.cmd` in the command above.
 
 Still requires a `.env` in each project root with your API key.
 
@@ -92,7 +98,9 @@ Create `.cursor/mcp.json` in your project root.
 }
 ```
 
-The server reads `.env` and stores the session file (`.srschatagent-session.json`) in your project root automatically — no extra configuration needed.
+Reload MCP servers in Cursor (or restart it). The server reads `.env` and stores the session file (`.srschatagent-session.json`) in your project root automatically — no extra configuration needed.
+
+> **Cursor tip:** Use **Chat mode**, not Agent mode. Agent mode creates temporary intermediary files for every query, which is expected behaviour but can be noisy.
 
 ---
 
@@ -161,41 +169,37 @@ After setup, restart Claude Code (or reload MCP servers in Cursor), then ask:
 What tools do you have from srschatagent?
 ```
 
-Claude should mention `srs_query`. Then try a real query:
+Claude should mention `srs_query`. Then try a real query using the `@srschatagent` mention — this tells the AI to use the SRS knowledge base:
 
 ```
-What kind of engine does the Toyota Crown have?
+@srschatagent What kind of engine does the Toyota Crown have?
+```
+
+```
+@srschatagent Tell me the leave policy in my company.
+```
+
+```
+@srschatagent What were the key decisions from last week's sprint meeting?
+```
+
+You can also ask naturally without the mention — Claude will call `srs_query` automatically when the question looks organisation-specific:
+
+```
+What is the approval process for discount renewals?
 ```
 
 > **Note:** The server may take a few seconds to connect on first use — you may see "MCP server connecting" briefly. Wait a moment and try again if the tool doesn't respond immediately.
 
 ---
 
-## Usage
-
-Ask questions naturally — Claude will call `srs_query` automatically:
-
-```
-What kind of engine does the Toyota Crown have?
-What was the main topic of the meeting on May 22, 2024?
-What are the approval requirements for a renewal deal with a discount?
-What is the publication date of the blockchain paper?
-```
-
-To start a fresh conversation (clear session context):
-
-```
-Start a new SRS session and ask about the Toyota Crown engine.
-```
-
----
 
 ## Session management
 
 Your conversation context is persisted in `.srschatagent-session.json` in the project root (git-ignored). This means follow-up questions carry context from previous ones — just like the SRS chat web app.
 
 To reset:
-- Tell Claude: *"Start a new SRS session"*
+- If you need the entire session to use the SRS tool, ask: *"Start a new SRS session using @srschatagent"*
 - Or delete `.srschatagent-session.json`
 
 ---
